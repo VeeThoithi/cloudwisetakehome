@@ -97,9 +97,12 @@ def get_cosmetic(cosmetic_id: str):
 @app.get("/cosmetics")
 def list_cosmetics(
     page: int = Query(1, ge=1),
-    page_size: int = Query(10, ge=1, le=100),
+    page_size: int = Query(5, ge=1, le=100),
+    brand: str | None = Query(None),
 ):
     items = list(cosmetic_db.values())
+    if brand:
+        items = [item for item in items if item["brand"].lower() == brand.lower()]
 
     start = (page - 1) * page_size
     end = start + page_size
